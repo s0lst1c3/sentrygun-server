@@ -47,7 +47,7 @@ current_alerts = {
 		channel = a['channel'];
 		intent = a['intent'];
 
-		$('#set').append('<div data-role="collapsible" class="'+alert_id+'"><h3>'+ssid+' '+bssid+' '+channel+' '+intent+'</h3><p></p></div>').collapsibleset('refresh');
+		$('#set').append('<div data-role="collapsible" class="'+alert_id+'"><h3>'+bssid+' '+channel+' '+intent+'</h3><p></p></div>').collapsibleset('refresh');
 	
 		$('.'+alert_id+' p').append('<div class="tablewrap"></div>');
 		$('.'+alert_id+' .tablewrap').append('<div class="overflower"></div>');
@@ -139,7 +139,7 @@ current_alerts = {
 			console.log(len);
 			$('#'+alert_id).append('<tr class="tr'+i+'">');
 			$('#'+alert_id+' .tr'+i).append('<td class="device-id">'+next_row[0]+'</td>');
-			$('#'+alert_id+' .tr'+i).append('<td class="distance">'+(1.0/Math.sqrt(next_row[1]))+'</td>');
+			$('#'+alert_id+' .tr'+i).append('<td class="distance">'+(1.0/Math.sqrt(256 + next_row[1]))+'</td>');
 			$('#'+alert_id+' .tr'+i).append('<td class="tx">'+next_row[1]+'</td>');
 			
 		}

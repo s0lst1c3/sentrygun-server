@@ -208,7 +208,8 @@ def redis_monitor():
         
             alert = [{ 'id' : msg[0], 'location' : msg[1] }]
     
-            response = requests.post('http://0.0.0.0:80/alert/dismiss', json=alert)
+            #response = requests.post('http://0.0.0.0:80/alert/dismiss', json=alert)
+            response = requests.post('http://192.168.125.99/alert/dismiss', json=alert)
 
             print 'Sent to self:', response
     
