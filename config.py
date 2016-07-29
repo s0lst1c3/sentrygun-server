@@ -14,3 +14,6 @@ SOCKETIO_NS='/watchdog'
 
 # namespace for sensor clients
 LISTENER_NS='/punisher'
+
+# identity file for ssh connections
+IDENTITY_FILE='/root/.ssh/id_rsa'

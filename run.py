@@ -35,15 +35,11 @@ Command line arguments:
 import time
 import json
 import subprocess
+import sys
 
 from argparse import ArgumentParser
-from sentrygund import sentrygund, socketio, RedisMon
-
-def os_system(command):
-
-    command = command.split()
-    p = subprocess.Popen(command, stdout=subprocess.PIPE)
-    output, err = p.communicate()
+from sentrygund import sentrygund, socketio, RedisMon, utils
+from multiprocessing import Process
 
 def display_banner():
 
@@ -73,18 +69,18 @@ def set_configs():
             required=False,
             type=int,
             default=80,
-            help='Run server on this port')
+            help='Specifies the port on which sentrygun-server should listen (defaults to 80)')
 
     parser.add_argument('--host',
             required=False,
             type=str,
             default='0.0.0.0',
-            help='Run server on this address')
+            help='Specifies the address at which sentrygun-server should listen (defaults to 0.0.0.0)')
 
     parser.add_argument('--debug',
             action='store_true',
             default=False,
-            help='Run in debug mode.')
+            help='Run in debug mode (not recommended for production environments)')
 
     parser.add_argument('--expire',
             dest='expire',
@@ -92,13 +88,31 @@ def set_configs():
             type=int,
             default=0,
             help=''.join(['Sets the number of seconds that alerts ',
-                          'should remain active. Alerts never expire',
-                          ' when set to 0 (default).']))
+                          'should remain active before they are ',
+                          'automatically dismissed. To disable alert ',
+                          'expiration, set this to 0 (default).']))
+
+    parser.add_argument('--tunnels',
+            dest='tunnels',
+            required=False,
+            type=str,
+            nargs='+',
+            metavar='dest',
+            help=''.join(['Create an ssh tunnel from localhost:PORT on ',
+                        'sentrygun-server to localhost:PORT on a list ',
+                        'of of sentrygun clients, where PORT is the port ',
+                        'at which sentrygun-server listens on. When this ',
+                        'flag is used, sentrygun-server will always listen ',
+                        'on localhost regardless of whether the --host is ',
+                        'used. Use this option when running sentrygun on a ',
+                        'hostile network. Sentrygun clients should be ',
+                        'specified with the format user@host:port.']))
 
     args = parser.parse_args()
 
+    sentrygund.config['TUNNELS'] = args.tunnels
     sentrygund.config.port = args.port
-    sentrygund.config.host = args.host
+    sentrygund.config.host = '127.0.0.1' if args.tunnels is None else args.host
     sentrygund.config.debug = args.debug
     sentrygund.config['EXPIRE'] = args.expire
     sentrygund.config['USE_REDIS'] = args.expire > 0
@@ -107,11 +121,14 @@ def main():
 
     set_configs()
 
+    if sentrygund.config['TUNNELS'] is not None:
+        utils.create_reverse_tunnels()
+
     display_banner()
 
     if sentrygund.config['USE_REDIS']:
         print '[*] Starting redis-server daemon...'
-        os_system('redis-server ./redis.conf')
+        utils.os_system('redis-server ./redis.conf')
 
         time.sleep(2)
 
@@ -135,14 +152,17 @@ def main():
 
     except KeyboardInterrupt:
 
+        if sentrygund.config['TUNNELS'] is not None:
+            utils.destroy_reverse_tunnels()
+
         if sentrygund.config['USE_REDIS']:
             redis_mon.stop()
 
-        print '[*] Gracefully shutting down redis-server'
+            print '[*] Gracefully shutting down redis-server'
 
-        # yep, "gracefully"
-        os_system('for i in `pgrep redis-server`; do kill $i; done')
-        os_system('rm -f dump.rdb')
+            # yep, "gracefully"
+            utils.os_system('for i in `pgrep redis-server`; do kill $i; done')
+            utils.os_system('rm -f dump.rdb')
 
     print '[*] Goodbye!'
 

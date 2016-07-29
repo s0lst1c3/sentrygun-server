@@ -1,6 +1,15 @@
 import re
 import bleach
 import time
+import subprocess
+from sentrygund import sentrygund
+
+def os_system(command):
+
+    command = command.split()
+    print command
+    p = subprocess.Popen(command, stdout=subprocess.PIPE)
+    output, err = p.communicate()
 
 def is_int(n):
 
@@ -44,3 +53,34 @@ def sanitize_alert(alert):
     assert is_float(alert['timestamp'])
 
     return alert
+
+def create_reverse_tunnels():
+
+    identity_file = sentrygund.config['IDENTITY_FILE']
+    for index, sensor in enumerate(sentrygund.config['TUNNELS']):
+        sensor = sensor.split(':')
+        if len(sensor) > 1:
+            ssh_port = int(sensor[1])
+        else:
+            ssh_port = 22
+        rhost = sensor[0]
+        lport = sentrygund.config.port
+        autossh_out = index+10035
+        
+        os_system('./scripts/open_botnet.sh %s %d %s %d %d' %\
+            (identity_file, ssh_port, rhost, lport, autossh_out))
+
+def destroy_reverse_tunnels():
+
+    os_system('./scripts/kill_autossh.sh')
+
+    print "[*] Cleaning up remaining connections on remote sensors..."
+    for index, sensor in enumerate(sentrygund.config['TUNNELS']):
+        sensor = sensor.split(':')
+        if len(sensor) > 1:
+            ssh_port = int(sensor[1])
+        else:
+            ssh_port = 22
+        rhost = sensor[0]
+    
+        os_system('./scripts/close_botnet.sh %s %d' % (rhost, ssh_port))
