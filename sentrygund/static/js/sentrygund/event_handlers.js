@@ -15,27 +15,11 @@ current_alerts = {
 		this.storage[alert_id]++;
 		console.log(this.storage[alert_id]);
 		this.add_to_collapsible(new_alert);
-
-		//alert_location = new_alert['location'];
-		//if (!(alert_location in this.storage) || this.storage[alert_location] === 0) {
-
-		//	this.storage[alert_location] = 0;
-		//	this.create_collapsible(alert_location);
-		//}
-		//this.storage[alert_location]++;
-		//console.log(this.storage[alert_location]);
-		//this.add_to_collapsible(new_alert);
-		//this.notify();
 	},
 	remove : function(a) {
 
 		this.remove_from_collapsible(a);
-		//this.storage[alert_location]--;
-		//console.log(this.storage[alert_location]);
-		//if (this.storage[alert_location] === 0) {
-
 		this.destroy_collapsible(a['id']);
-		//}
 	},
 	create_collapsible : function(a) {
 
@@ -53,7 +37,6 @@ current_alerts = {
 		$('.'+alert_id+' .tablewrap').append('<div class="overflower"></div>');
 		$('.'+alert_id+' .overflower').append('<form data-ajax="false" class="'+alert_id+'form"></form>');
 		$('.'+alert_id+' form').append('<span class="tablespan"></span>');
-		//$('.'+alert_location+' .tablespan').append('<table data-role="table" class="ui-responsive table-stroke"></table>');
 		$('.'+alert_id+' .tablespan').append('<table data-role="table" class="sel-table ui-responsive table-shadow"></table>');
 		$('.'+alert_id+' .tablespan table').append('<thead></thead>');
 		$('.'+alert_id+' .tablespan table').append('<tbody id="'+alert_id+'"></tbody>');
@@ -74,39 +57,6 @@ current_alerts = {
 		$('.'+alert_id+' fieldset').append('<input style="margin-left: 1em" type="submit" value="Submit"/>');
 		$('.'+alert_id+' form').trigger('create');
 		$('.'+alert_id+' form table').trigger('create');
-		/*
-		$('#set').append('<div data-role="collapsible" class="'+alert_location+'"><h3>'+alert_location+'</h3><p></p></div>').collapsibleset('refresh');
-	
-		$('.'+alert_location+' p').append('<div class="tablewrap"></div>');
-		$('.'+alert_location+' .tablewrap').append('<div class="overflower"></div>');
-		$('.'+alert_location+' .overflower').append('<form data-ajax="false" class="'+alert_location+'form"></form>');
-		$('.'+alert_location+' form').append('<span class="tablespan"></span>');
-		//$('.'+alert_location+' .tablespan').append('<table data-role="table" class="ui-responsive table-stroke"></table>');
-		$('.'+alert_location+' .tablespan').append('<table data-role="table" class="sel-table ui-responsive table-shadow"></table>');
-		$('.'+alert_location+' .tablespan table').append('<thead></thead>');
-		$('.'+alert_location+' .tablespan table').append('<tbody id="'+alert_location+'"></tbody>');
-		$('.'+alert_location+' thead').append('<th>Type</th>');
-		$('.'+alert_location+' thead').append('<th>BSSID</th>');
-		$('.'+alert_location+' thead').append('<th>Channel</th>');
-		$('.'+alert_location+' thead').append('<th>ESSID</th>');
-		$('.'+alert_location+' thead').append('<th>Details</th>');
-		$('.'+alert_location+' thead').append('<th>Timestamp</th>');
-		$('.'+alert_location+' thead').append('<th>tx</th>');
-		$('.'+alert_location+' form').append('<fieldset data-role="controlgroup" data-type="horizontal" ></fieldset>');
-
-		$('.'+alert_location+' fieldset').append('<input type="radio" name="radio-choice-2" id="radio-choice-21" value="choice-1" checked="checked" />');
-		$('.'+alert_location+' fieldset').append('<label for="radio-choice-21">Locate</label>');
-		$('.'+alert_location+' fieldset').append('<input type="radio" name="radio-choice-2" id="radio-choice-22" value="choice-2" />');
-		$('.'+alert_location+' fieldset').append('<label for="radio-choice-22">Deauth</label>');
-		$('.'+alert_location+' fieldset').append('<input type="radio" name="radio-choice-2" id="radio-choice-23" value="choice-3" />');
-		$('.'+alert_location+' fieldset').append('<label for="radio-choice-23">Napalm</label>');
-		$('.'+alert_location+' fieldset').append('<input type="radio" name="radio-choice-2" id="radio-choice-24" value="choice-4" />');
-		$('.'+alert_location+' fieldset').append('<label for="radio-choice-24">Dismiss</label>');
-		$('.'+alert_location+' fieldset').append('<input style="margin-left: 1em" type="submit" value="Submit"/>');
-		$('.'+alert_location+' form').trigger('create');
-		$('.'+alert_location+' form table').trigger('create');
-
-	*/
 	},
 	destroy_collapsible : function(alert_id) {
 
@@ -117,7 +67,6 @@ current_alerts = {
 		console.log('woah');
 		alert_id = a['id'];
 		$('#'+alert_id).empty();
-		//console.log(a['locations']);
 
 		var sortable = [];
 		for (var device in a['locations']) {
@@ -145,29 +94,6 @@ current_alerts = {
 		}
 
 		console.log(sortable);
-		/*
-
-		console.log('test');
-		alert_location = a['location'];
-id='+alert
-
-		console.log(a['id']);
-	
-		// need to make this table not suck lol
-		$('.'+alert_location+' tbody').append('<tr id="'+a['id']+'">');
-		$('#'+a['id']).append('<td class="intent">'+a['intent']+'</td>');
-		$('#'+a['id']).append('<td class="bssid">'+a['bssid']+'</td>');
-		$('#'+a['id']).append('<td class="channel">'+a['channel']+'</td>');
-		$('#'+a['id']).append('<td class="essid">'+a['essid']+'</td>');
-		$('#'+a['id']).append('<td class="smdescription">'+this.intent2description(a['intent'])+'</td>');
-		$('#'+a['id']).append('<td class="timestamp">'+new Date(parseInt(a['timestamp']))+'</td>');
-		$('#'+a['id']).append('<td class="tx">'+a['tx']+'</td>');
-
-		init_selectable();
-		//$('table').table('refresh');
-		*/
-
-
 	},
 	remove_from_collapsible : function(a) {
 
@@ -271,18 +197,6 @@ function dismiss_alerts(form) {
 	
 	alerts = [];
 	alerts.push({ 'id' : alert_location });
-	//console.log(alert_location);
-	//rows = tbody.find('tr');
-	//for (var i = 0; i < rows.length; i++) {
-	//	console.log($(rows[i]).hasClass('ui-selected'));
-	//	if ($(rows[i]).hasClass('ui-selected')) {
-
-	//		alerts.push({
-	//			'id' : rows[i].id,
-	//			'location' : alert_location
-	//		});
-	//	}
-	//}
 	$.ajax({
     	type: 'POST',
     	url: 'alert/dismiss',

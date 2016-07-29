@@ -3,8 +3,6 @@ protocol = 'http'
 $(document).ready(function() {
 
 	// setup page -------------------------------------------------------------
-	init_selectable();
-
 	get_all_alerts();
 
 	// setup socketio ---------------------------------------------------------
@@ -21,8 +19,6 @@ $(document).ready(function() {
 	var socket = io.connect(sock_uri);
 
 	// socketio events --------------------------------------------------------
-
-	//socket.on('connect', on_connect);
 
 	socket.on('dismiss alerts', on_alert_dismiss);
 	
