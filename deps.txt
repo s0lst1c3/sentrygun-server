@@ -2,3 +2,4 @@
 gcc
 redhat-rpm-config
 python-devel
+autossh
